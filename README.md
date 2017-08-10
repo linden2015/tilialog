@@ -2,6 +2,8 @@
 
 A Java program that calculates time spent for worklogs.
 
+![image](https://s28.postimg.org/pv1rq5yct/tilialog_0_1_reduced.png)
+
 ## Instructions
 
 Run as follows:
