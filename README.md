@@ -23,6 +23,7 @@ Run as follows:
 * Display time spent in 'minutes' and 'hours and minutes'
 * Calculate total time spent
 * Make calculations in real-time.
+* Autosave so that it can be safely used for live logging
 
 ## License
 
