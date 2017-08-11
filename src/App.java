@@ -4,13 +4,35 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.TimerTask;
 public class App implements Runnable {
     private JCheckBox combineStories;
     private java.util.List<java.util.List<JTextField>> entries = new ArrayList<>();
+    private JFrame frame;
     @Override
     public void run() {
-        JFrame frame = appFrame();
+        frame = appFrame();
+        new java.util.Timer().scheduleAtFixedRate(new BackupSave(), 0, 300_000);
+    }
+    private class BackupSave extends TimerTask {
+        @Override
+        public void run() {
+            try {
+                FileWriter fw = new FileWriter(
+                    LocalDate.now().toString() + ".backup.txt", true
+                );
+                fw.append(new Report(entries).toString());
+                fw.close();
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(
+                    frame, "Autosave failed. " + e.getMessage()
+                );
+            }
+        }
     }
     private JFrame appFrame() {
         JFrame frame = new JFrame("TiliaLog");
@@ -56,9 +78,7 @@ public class App implements Runnable {
                             JOptionPane.showMessageDialog(
                                 panel, new Report(entries).regularAsString()
                             );
-                        } catch (
-                            IllegalArgumentException | IllegalStateException ex
-                        ) {
+                        } catch (IllegalArgumentException | IllegalStateException ex) {
                             JOptionPane.showMessageDialog(panel, ex.getMessage());
                         }
                     }

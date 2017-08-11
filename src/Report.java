@@ -1,6 +1,8 @@
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.swing.*;
 public class Report {
     public static String systemEOL = System.getProperty("line.separator");
@@ -43,5 +45,24 @@ public class Report {
     }
     public String combinedAsString() {
         return "1";
+    }
+    public String toString() {
+        StringBuilder sbLog = new StringBuilder("# TiliaLog plain text report #");
+        sbLog.append(systemEOL);
+        sbLog.append("Local datetime: " + LocalDateTime.now().toString());
+        sbLog.append(systemEOL);
+        for (List<JTextField> logEntry : logEntries) {
+            StringBuilder sbEntry = new StringBuilder();
+            for (JTextField textField: logEntry) {
+                sbEntry.append(textField.getText());
+                sbEntry.append("\t");
+            }
+            sbEntry.append(systemEOL);
+            sbEntry.toString();
+            if (Pattern.compile("\\w").matcher(sbEntry).find()) {
+                sbLog.append(sbEntry);
+            }
+        }
+        return sbLog.toString();
     }
 }

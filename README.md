@@ -15,15 +15,20 @@ Run as follows:
 
 * Java 1.8+
 
-## Possible improvements
+## Possible functional improvements
 
-* Check no overlap between logs.
-* Tests for the UI
-* Combine stories
+* A way to add the current time so that it doesn't have to be entered manually
+* Check for overlap between logs
+* Combine stories with the same story-code into single logs
 * Display time spent in 'minutes' and 'hours and minutes'
 * Calculate total time spent
-* Make calculations in real-time.
-* Autosave so that it can be safely used for live logging
+* Real-time calculation
+
+## Possible technical improvements
+
+* Smaller classes
+* Dependency injection
+* UI testing
 
 ## License
 
