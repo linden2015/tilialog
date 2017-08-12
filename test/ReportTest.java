@@ -7,15 +7,26 @@ import static org.junit.Assert.assertEquals;
 public class ReportTest {
     @Test
     public void basicToString() {
-        List<JTextField> entry = Arrays.<JTextField>asList(
-            new JTextField("1"), new JTextField("2"), new JTextField("3")
-        );
-        List<List<JTextField>> entries = new ArrayList<>();
+        List<EntryRow> entries = new ArrayList<>();
+        EntryRow entry = new EntryRow() {
+            @Override
+            public String story() {
+                return "TiliaLog";
+            }
+            @Override
+            public String startedAt() {
+                return "09:30";
+            }
+            @Override
+            public String endedAt() {
+                return "09:45";
+            }
+        };
         entries.add(entry);
         String stringReport = new Report(entries).toString();
         assertEquals(true, stringReport.contains("TiliaLog"));
         assertEquals(true, stringReport.contains("Local datetime"));
-        assertEquals(true, stringReport.contains("1\t2\t3"));
+        assertEquals(true, stringReport.contains("TiliaLog\t09:30\t09:45"));
         System.out.println(stringReport);
     }
 }

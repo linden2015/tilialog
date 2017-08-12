@@ -1,21 +1,34 @@
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TimerTask;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 public class App implements Runnable {
-    private JCheckBox combineStories;
-    private java.util.List<java.util.List<JTextField>> entries = new ArrayList<>();
-    private JFrame frame;
+    private OptionsPanel optionsPanel = new OptionsPanel();
+    private TitlePanel titlePanel = new TitlePanel();
+    private LogsEntryPanel logsEntryPanel = new LogsEntryPanel();
+    private MainFrame mainFrame;
     @Override
     public void run() {
-        frame = appFrame();
+        mainFrame = new MainFrame();
         new java.util.Timer().scheduleAtFixedRate(new BackupSave(), 0, 300_000);
     }
     private class BackupSave extends TimerTask {
@@ -23,101 +36,158 @@ public class App implements Runnable {
         public void run() {
             try {
                 FileWriter fw = new FileWriter(
-                    LocalDate.now().toString() + ".backup.txt", true
+                    LocalDate.now().toString() + ".backup.txt",
+                    true
                 );
-                fw.append(new Report(entries).toString());
+                fw.append(new Report(logsEntryPanel.entryRows()).toString());
                 fw.close();
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(
-                    frame, "Autosave failed. " + e.getMessage()
+                    mainFrame.frame(), "Autosave failed. " + e.getMessage()
                 );
             }
         }
     }
-    private JFrame appFrame() {
-        JFrame frame = new JFrame("TiliaLog");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        frame.add(logsEntryPanel());
-        frame.setResizable(false);
-        frame.setSize(new Dimension(650, 550));
-        frame.setLocationRelativeTo(null);
-        return frame;
-    }
-    private JPanel logsEntryPanel() {
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(500, 500));
-        panel.setLayout(new FlowLayout());
-        panel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        panel.add(titlePanel());
-        for (int i = 1; i <= 15; i++) {
-            panel.add(entryPanel());
+    private class MainFrame {
+        private JFrame frame = new JFrame("TiliaLog");
+        public MainFrame() {
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            frame.setResizable(false);
+            frame.setSize(new Dimension(650, 550));
+            frame.add(logsEntryPanel.panel());
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
         }
-        panel.add(entryPanel());
-        panel.add(optionsPanel());
-        return panel;
+        public JFrame frame() {
+            return frame;
+        }
     }
-    private JPanel optionsPanel() {
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(500, 40));
-        combineStories = new JCheckBox("Combine stories");
-        panel.add(combineStories);
-        JButton generateReport = new JButton("Generate report");
-        generateReport.addActionListener(
-            new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (combineStories.isSelected()) {
+    private class LogsEntryPanel {
+        private JPanel panel = new JPanel();
+        private List<EntryRow> entryRowPanels = new ArrayList<>();
+        public LogsEntryPanel() {
+            panel.setPreferredSize(new Dimension(500, 500));
+            panel.setLayout(new FlowLayout());
+            panel.setBorder(new EmptyBorder(20, 20, 20, 20));
+            panel.add(titlePanel.panel());
+            for (int i = 1; i <= 15; i++) {
+                EntryRowPanel entryRowPanel = new EntryRowPanel();
+                entryRowPanels.add(entryRowPanel);
+                panel.add(entryRowPanel.panel());
+            }
+            panel.add(optionsPanel.panel());
+        }
+        public JPanel panel() {
+            return panel;
+        }
+        public List<EntryRow> entryRows() {
+            return entryRowPanels;
+        }
+    }
+    private class TitlePanel {
+        private JPanel panel = new JPanel();
+        public TitlePanel() {
+            panel.setPreferredSize(new Dimension(500, 20));
+            panel.setLayout(new GridLayout(0, 4, 20, 20));
+            panel.add(new JLabel("Story"));
+            panel.add(new JLabel("Started at"));
+            panel.add(new JLabel("Ended at"));
+            panel.add(new JLabel("Actions"));
+        }
+        public JPanel panel() {
+            return panel;
+        }
+    }
+    private class OptionsPanel {
+        private JPanel panel = new JPanel();
+        private JCheckBox combineStoriesCheckBox = new JCheckBox("Combine stories");
+        private JButton generateReport = new JButton("Generate report");
+        public OptionsPanel() {
+            panel.setPreferredSize(new Dimension(500, 40));
+            panel.add(combineStoriesCheckBox);
+            generateReport.addActionListener(new GenerateReportActionListener());
+            panel.add(generateReport);
+        }
+        public JPanel panel() {
+            return panel;
+        }
+        private Boolean combineStoriesIsSelected() {
+            return combineStoriesCheckBox.isSelected();
+        }
+        private class GenerateReportActionListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (combineStoriesIsSelected()) {
+                    JOptionPane.showMessageDialog(panel,
+                        "Maybe in next release."
+                        + "Try without combining stories for now."
+                    );
+                }
+
+                if (! combineStoriesIsSelected()) {
+                    try {
                         JOptionPane.showMessageDialog(
                             panel,
-                            "Maybe in next release." +
-                                "Try without combining stories for now."
+                            new Report(logsEntryPanel.entryRows()).regularAsString()
                         );
-                    } else {
-                        try {
-                            JOptionPane.showMessageDialog(
-                                panel, new Report(entries).regularAsString()
-                            );
-                        } catch (IllegalArgumentException | IllegalStateException ex) {
-                            JOptionPane.showMessageDialog(panel, ex.getMessage());
-                        }
+                    } catch (IllegalArgumentException|IllegalStateException ex) {
+                        JOptionPane.showMessageDialog(
+                            panel,
+                            ex.getMessage()
+                        );
                     }
                 }
             }
-        );
-        panel.add(generateReport);
-        return panel;
+        }
     }
-    private JPanel titlePanel() {
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(500, 20));
-        panel.setLayout(new GridLayout(0, 3, 20, 20));
-        panel.add(new JLabel("Story"));
-        panel.add(new JLabel("Started at"));
-        panel.add(new JLabel("Ended at"));
-        return panel;
-    }
-    private JPanel entryPanel() {
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(500, 20));
-        panel.setLayout(new GridLayout(0, 3, 20, 20));
-
-        JTextField storyField = new JTextField();
-        panel.add(storyField);
-
-        JTextField startedAtField = new JTextField();
-        panel.add(startedAtField);
-
-        JTextField endedAtField = new JTextField();
-        panel.add(endedAtField);
-
-        ArrayList<JTextField> entry = new ArrayList<>();
-        entry.add(storyField);
-        entry.add(startedAtField);
-        entry.add(endedAtField);
-        entries.add(entry);
-
-        return panel;
+    private class EntryRowPanel implements EntryRow {
+        private JPanel panel = new JPanel();
+        private JTextField storyField = new JTextField();
+        private JTextField startedAtField = new JTextField();
+        private JTextField endedAtField = new JTextField();
+        private JButton stampTime = new JButton("Stamp");
+        public EntryRowPanel() {
+            panel.setPreferredSize(new Dimension(500, 20));
+            panel.setLayout(new GridLayout(0, 4, 20, 20));
+            panel.add(storyField);
+            panel.add(startedAtField);
+            panel.add(endedAtField);
+            stampTime.setToolTipText(
+                "Enters the current time to the next available field"
+            );
+            stampTime.addActionListener(new stampTimeActionListener());
+            panel.add(stampTime);
+        }
+        private class stampTimeActionListener implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String now = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
+                if (startedAt().length() == 0) {
+                    startedAtField.setText(now);
+                } else if (endedAt().length() == 0) {
+                    endedAtField.setText(now);
+                } else {
+                    JOptionPane.showMessageDialog(panel,
+                        "No available field to enter current time to."
+                    );
+                }
+            }
+        }
+        public JPanel panel() {
+            return panel;
+        }
+        @Override
+        public String story() {
+            return storyField.getText();
+        }
+        @Override
+        public String startedAt() {
+            return startedAtField.getText();
+        }
+        @Override
+        public String endedAt() {
+            return endedAtField.getText();
+        }
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new App());

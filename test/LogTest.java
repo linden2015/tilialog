@@ -17,4 +17,10 @@ public class LogTest {
             "", LocalTime.parse("09:00"), LocalTime.parse("13:00")
         ).storyCode();
     }
+    @Test(expected = IllegalStateException.class)
+    public void negative_duration() {
+        new Log(
+            "AA-1", LocalTime.parse("13:00"), LocalTime.parse("09:00")
+        ).duration();
+    }
 }
