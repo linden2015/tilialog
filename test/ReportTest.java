@@ -11,7 +11,7 @@ public class ReportTest {
         EntryRow entry = new EntryRow() {
             @Override
             public String story() {
-                return "TiliaLog";
+                return "STORY-01";
             }
             @Override
             public String startedAt() {
@@ -25,8 +25,9 @@ public class ReportTest {
         entries.add(entry);
         String stringReport = new Report(entries).toString();
         assertEquals(true, stringReport.contains("TiliaLog"));
+        assertEquals(true, stringReport.contains("STORY-01"));
         assertEquals(true, stringReport.contains("Local datetime"));
-        assertEquals(true, stringReport.contains("TiliaLog\t09:30\t09:45"));
+        assertEquals(true, stringReport.contains("STORY-01\t09:30\t09:45"));
         System.out.println(stringReport);
     }
 }
