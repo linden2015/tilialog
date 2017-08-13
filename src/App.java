@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +11,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.BorderFactory;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -22,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 public class App implements Runnable {
+    public static String systemEOL = System.getProperty("line.separator");
     private OptionsPanel optionsPanel = new OptionsPanel();
     private TitlePanel titlePanel = new TitlePanel();
     private LogsEntryPanel logsEntryPanel = new LogsEntryPanel();
@@ -29,7 +33,9 @@ public class App implements Runnable {
     @Override
     public void run() {
         mainFrame = new MainFrame();
-        new java.util.Timer().scheduleAtFixedRate(new BackupSave(), 0, 300_000);
+        new Timer(true).scheduleAtFixedRate(
+            new BackupSave(), 0, 300_000
+        );
     }
     private class BackupSave extends TimerTask {
         @Override
@@ -53,7 +59,7 @@ public class App implements Runnable {
         public MainFrame() {
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setResizable(false);
-            frame.setSize(new Dimension(650, 550));
+            frame.setSize(new Dimension(840, 700));
             frame.add(logsEntryPanel.panel());
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
@@ -66,9 +72,9 @@ public class App implements Runnable {
         private JPanel panel = new JPanel();
         private List<EntryRow> entryRowPanels = new ArrayList<>();
         public LogsEntryPanel() {
-            panel.setPreferredSize(new Dimension(500, 500));
+            panel.setPreferredSize(new Dimension(840, 700));
             panel.setLayout(new FlowLayout());
-            panel.setBorder(new EmptyBorder(20, 20, 20, 20));
+            panel.setBorder(new EmptyBorder(10, 10, 10, 10));
             panel.add(titlePanel.panel());
             for (int i = 1; i <= 15; i++) {
                 EntryRowPanel entryRowPanel = new EntryRowPanel();
@@ -87,12 +93,28 @@ public class App implements Runnable {
     private class TitlePanel {
         private JPanel panel = new JPanel();
         public TitlePanel() {
-            panel.setPreferredSize(new Dimension(500, 20));
-            panel.setLayout(new GridLayout(0, 4, 20, 20));
-            panel.add(new JLabel("Story"));
-            panel.add(new JLabel("Started at"));
-            panel.add(new JLabel("Ended at"));
-            panel.add(new JLabel("Actions"));
+            panel.setPreferredSize(new Dimension(800, 30));
+            panel.setLayout(new FlowLayout());
+
+            JLabel storyLabel = new JLabel("Story");
+            storyLabel.setPreferredSize(new Dimension(100, 25));
+            panel.add(storyLabel);
+
+            JLabel startedAtLabel = new JLabel("Started at");
+            startedAtLabel.setPreferredSize(new Dimension(100, 25));
+            panel.add(startedAtLabel);
+
+            JLabel endedAtLabel = new JLabel("Ended at");
+            endedAtLabel.setPreferredSize(new Dimension(100, 25));
+            panel.add(endedAtLabel);
+
+            JLabel descriptionLabel = new JLabel("Description");
+            descriptionLabel.setPreferredSize(new Dimension(300, 25));
+            panel.add(descriptionLabel);
+
+            JLabel actionsLabel = new JLabel("Actions");
+            actionsLabel.setPreferredSize(new Dimension(100, 25));
+            panel.add(actionsLabel);
         }
         public JPanel panel() {
             return panel;
@@ -103,7 +125,7 @@ public class App implements Runnable {
         private JCheckBox combineStoriesCheckBox = new JCheckBox("Combine stories");
         private JButton generateReport = new JButton("Generate report");
         public OptionsPanel() {
-            panel.setPreferredSize(new Dimension(500, 40));
+            panel.setPreferredSize(new Dimension(800, 40));
             panel.add(combineStoriesCheckBox);
             generateReport.addActionListener(new GenerateReportActionListener());
             panel.add(generateReport);
@@ -145,17 +167,29 @@ public class App implements Runnable {
         private JTextField storyField = new JTextField();
         private JTextField startedAtField = new JTextField();
         private JTextField endedAtField = new JTextField();
+        private JTextField descriptionField = new JTextField();
         private JButton stampTime = new JButton("Stamp");
         public EntryRowPanel() {
-            panel.setPreferredSize(new Dimension(500, 20));
-            panel.setLayout(new GridLayout(0, 4, 20, 20));
+            panel.setPreferredSize(new Dimension(800, 30));
+            panel.setLayout(new FlowLayout());
+
+            storyField.setPreferredSize(new Dimension(100, 25));
             panel.add(storyField);
+
+            startedAtField.setPreferredSize(new Dimension(100, 25));
             panel.add(startedAtField);
+
+            endedAtField.setPreferredSize(new Dimension(100, 25));
             panel.add(endedAtField);
+
+            descriptionField.setPreferredSize(new Dimension(300, 25));
+            panel.add(descriptionField);
+
             stampTime.setToolTipText(
                 "Enters the current time to the next available field"
             );
             stampTime.addActionListener(new stampTimeActionListener());
+
             panel.add(stampTime);
         }
         private class stampTimeActionListener implements ActionListener {
@@ -187,6 +221,28 @@ public class App implements Runnable {
         @Override
         public String endedAt() {
             return endedAtField.getText();
+        }
+        @Override
+        public String description() {
+            return descriptionField.getText();
+        }
+        @Override
+        public Boolean isEmpty() {
+            return
+                story().length() == 0
+                && startedAt().length() == 0
+                && endedAt().length() == 0
+            ;
+        }
+        public String toString() {
+            return new StringBuilder()
+                .append(story()).append("\t")
+                .append(startedAt()).append("\t")
+                .append(endedAt()).append("\t")
+                .append(description())
+                .append(systemEOL)
+                .toString()
+            ;
         }
     }
     public static void main(String[] args) {

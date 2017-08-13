@@ -2,7 +2,7 @@
 
 A Java program that calculates time spent for worklogs.
 
-![image](https://s28.postimg.org/69avp8065/tilialog_0_3_reduced.png)
+![image](https://s4.postimg.org/iqm8d5fml/tilialog_0_4_reduced.png)
 
 ## Instructions
 
@@ -17,16 +17,21 @@ Run as follows:
 
 ## Possible functional improvements
 
-* Check for overlap between logs
 * Combine stories with the same story-code into single logs
-* Display time spent in 'minutes' and 'hours and minutes'
-* Calculate total time spent
 * Real-time calculation
+* A settings screen
+* Round timestamps to 5 or 10 min or <setting>
 
 ## Possible technical improvements
 
 * Dependency injection
 * UI testing
+
+## Possible visual improvements
+
+* Input more like a spreadsheet
+* Scrollbars and infinite inputs
+* Improved text readability
 
 ## License
 

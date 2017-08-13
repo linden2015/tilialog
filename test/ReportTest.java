@@ -21,13 +21,24 @@ public class ReportTest {
             public String endedAt() {
                 return "09:45";
             }
+            @Override
+            public String description() {
+                return "DESCR";
+            }
+            @Override
+            public Boolean isEmpty() {
+                return false;
+            }
+            @Override
+            public String toString() {
+                return "STORY-01\t09:30\t09:45\tDESCR";
+            }
         };
         entries.add(entry);
         String stringReport = new Report(entries).toString();
         assertEquals(true, stringReport.contains("TiliaLog"));
-        assertEquals(true, stringReport.contains("STORY-01"));
         assertEquals(true, stringReport.contains("Local datetime"));
-        assertEquals(true, stringReport.contains("STORY-01\t09:30\t09:45"));
+        assertEquals(true, stringReport.contains("STORY-01\t09:30\t09:45\tDESCR"));
         System.out.println(stringReport);
     }
 }

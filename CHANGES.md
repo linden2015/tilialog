@@ -1,3 +1,9 @@
+# 0.4
+
+* Checks for overlap between logs
+* Calculates total time spent
+* Log has a description field
+
 # 0.3
 
 * Is able to enter the current time with a button press
