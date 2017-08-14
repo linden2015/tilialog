@@ -1,3 +1,7 @@
+# 0.5
+
+* Scrollbars and infinite inputs
+
 # 0.4
 
 * Checks for overlap between logs

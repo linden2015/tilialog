@@ -30,7 +30,6 @@ Run as follows:
 ## Possible visual improvements
 
 * Input more like a spreadsheet
-* Scrollbars and infinite inputs
 * Improved text readability
 
 ## License
