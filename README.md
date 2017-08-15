@@ -17,7 +17,6 @@ Run as follows:
 
 ## Possible functional improvements
 
-* Combine stories with the same story-code into single logs
 * Real-time calculation
 * A settings screen
 * Round timestamps to 5 or 10 min or <setting>

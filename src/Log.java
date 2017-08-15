@@ -50,11 +50,18 @@ public class Log implements Comparable<Log> {
         ;
     }
     public String toString() {
-        return new StringBuilder(storyCode()).append("-")
+        return new StringBuilder(storyCode()).append(" ")
             .append(startTime.format(DateTimeFormatter.ofPattern("HH:mm")))
             .append("-")
             .append(endTime.format(DateTimeFormatter.ofPattern("HH:mm")))
             .toString()
         ;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (! (obj instanceof Log)) {
+            return false;
+        }
+        return false;
     }
 }

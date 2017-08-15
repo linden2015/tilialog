@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 public class Report {
     public static String systemEOL = System.getProperty("line.separator");
@@ -19,11 +21,53 @@ public class Report {
         Duration totalTime = Duration.ZERO;
         for (Log log : validatedLogEntries()) {
             sb.append(log.storyCode() + ": ")
-                .append(log.duration().getSeconds() / 60 + " min. ")
+                .append(log.duration().getSeconds() / 60 + " min ")
                 .append(log.description())
                 .append(systemEOL)
             ;
             totalTime = totalTime.plus(log.duration());
+        }
+        sb.append(systemEOL).append("Total time spent: ")
+            .append(String.format(
+                "%d hrs %d min",
+                totalTime.getSeconds() / 3600,
+                (totalTime.getSeconds() % 3600) / 60)
+        );
+        return sb.toString();
+    }
+    public String combinedAsString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Time spent per story").append(systemEOL+systemEOL);
+        Duration totalTime = Duration.ZERO;
+        List<Log> logs = validatedLogEntries();
+        Set<Integer> appliedLogs = new HashSet<>();
+        for (int i = 0; i < logs.size(); i++) {
+            if (appliedLogs.contains(i)) {
+                continue;
+            }
+            StringBuilder descriptionI = new StringBuilder()
+                .append(systemEOL)
+                .append(logs.get(i).description());
+            Duration durationI = logs.get(i).duration();
+            for (int j = 0; j < logs.size(); j++) {
+                if (appliedLogs.contains(j) || (i == j)) {
+                    continue;
+                }
+                if (logs.get(i).storyCode().equals(logs.get(j).storyCode())) {
+                    descriptionI.append(systemEOL)
+                        .append(logs.get(j).description())
+                    ;
+                    durationI = durationI.plus(logs.get(j).duration());
+                    appliedLogs.add(j);
+                }
+            }
+            sb.append(logs.get(i).storyCode() + ": ")
+                .append(durationI.getSeconds() / 60 + " min ")
+                .append(descriptionI)
+                .append(systemEOL)
+            ;
+            totalTime = totalTime.plus(durationI);
+            appliedLogs.add(i);
         }
         sb.append(systemEOL).append("Total time spent: ")
             .append(String.format(
@@ -80,9 +124,6 @@ public class Report {
         }
 
         return logs;
-    }
-    public String combinedAsString() {
-        return "1";
     }
     public String toString() {
         StringBuilder sbLog = new StringBuilder("# TiliaLog plain text report #")

@@ -7,26 +7,26 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.swing.BorderFactory;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.ScrollPaneLayout;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.ScrollPaneLayout;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 public class App implements Runnable {
@@ -63,7 +63,6 @@ public class App implements Runnable {
         private JFrame frame = new JFrame("TiliaLog");
         public MainFrame() {
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.setResizable(false);
             frame.setSize(new Dimension(925, 525));
             frame.add(logsEntryPanel.panel());
             frame.setLocationRelativeTo(null);
@@ -110,7 +109,6 @@ public class App implements Runnable {
             entryPanel.setPreferredSize(
                 new Dimension(840, entryPanel.getComponentCount() * 40)
             );
-            System.out.println(entryPanel.getComponentCount());
         }
     }
     private class TitlePanel {
@@ -166,10 +164,17 @@ public class App implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (combineStoriesIsSelected()) {
-                    JOptionPane.showMessageDialog(panel,
-                        "Maybe in next release."
-                        + "Try without combining stories for now."
-                    );
+                    try {
+                        JOptionPane.showMessageDialog(
+                            panel,
+                            new Report(logsEntryPanel.entryRows()).combinedAsString()
+                        );
+                    } catch (IllegalArgumentException|IllegalStateException ex) {
+                        JOptionPane.showMessageDialog(
+                            panel,
+                            ex.getMessage()
+                        );
+                    }
                 }
 
                 if (! combineStoriesIsSelected()) {

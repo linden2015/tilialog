@@ -1,3 +1,8 @@
+# 0.6
+
+* Resizable window
+* Is able to combine stories with the same story-code in the report
+
 # 0.5
 
 * Scrollbars and infinite inputs
