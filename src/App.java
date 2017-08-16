@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Pattern;
+import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
@@ -144,21 +147,26 @@ public class App implements Runnable {
     private class OptionsPanel {
         private JPanel panel = new JPanel();
         private JCheckBox combineStoriesCheckBox = new JCheckBox("Combine stories");
+        private JCheckBox roundStampToFivesCheckBox = new JCheckBox("Round stamp to fives");
         private JButton generateReport = new JButton("Generate report");
         private JButton addEntryRow = new JButton("Add row");
         public OptionsPanel() {
             panel.setPreferredSize(new Dimension(800, 40));
             panel.add(combineStoriesCheckBox);
-            generateReport.addActionListener(new GenerateReportActionListener());
-            panel.add(generateReport);
+            panel.add(roundStampToFivesCheckBox);
             addEntryRow.addActionListener(new AddEntryRowActionListener());
             panel.add(addEntryRow);
+            generateReport.addActionListener(new GenerateReportActionListener());
+            panel.add(generateReport);
         }
         public JPanel panel() {
             return panel;
         }
         private Boolean combineStoriesIsSelected() {
             return combineStoriesCheckBox.isSelected();
+        }
+        private Boolean roundStampToFivesIsSelected() {
+            return roundStampToFivesCheckBox.isSelected();
         }
         private class GenerateReportActionListener implements ActionListener {
             @Override
@@ -167,7 +175,12 @@ public class App implements Runnable {
                     try {
                         JOptionPane.showMessageDialog(
                             panel,
-                            new Report(logsEntryPanel.entryRows()).combinedAsString()
+                            new JTextArea(
+                                new Report(logsEntryPanel.entryRows())
+                                    .combinedAsString(),
+                                20,
+                                50
+                            )
                         );
                     } catch (IllegalArgumentException|IllegalStateException ex) {
                         JOptionPane.showMessageDialog(
@@ -181,7 +194,12 @@ public class App implements Runnable {
                     try {
                         JOptionPane.showMessageDialog(
                             panel,
-                            new Report(logsEntryPanel.entryRows()).regularAsString()
+                            new JTextArea(
+                                new Report(logsEntryPanel.entryRows())
+                                    .regularAsString(),
+                                20,
+                                50
+                            )
                         );
                     } catch (IllegalArgumentException|IllegalStateException ex) {
                         JOptionPane.showMessageDialog(
@@ -234,7 +252,14 @@ public class App implements Runnable {
         private class stampTimeActionListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String now = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
+                Clock clock = new Clock(LocalTime.now());
+                String now;
+                if (optionsPanel.roundStampToFivesIsSelected()) {
+                    now = clock.asStringRoundedToFives();
+                } else {
+                    now = clock.asString();
+                }
+
                 if (startedAt().length() == 0) {
                     startedAtField.setText(now);
                 } else if (endedAt().length() == 0) {

@@ -1,3 +1,8 @@
+# 0.7
+
+* Outputs report in a textarea
+* Is able to round stamp to fives
+
 # 0.6
 
 * Resizable window

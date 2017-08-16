@@ -1,8 +1,8 @@
 # TiliaLog
 
-A Java program that calculates time spent for worklogs.
+A Java program that helps you log time.
 
-![image](https://s4.postimg.org/iqm8d5fml/tilialog_0_4_reduced.png)
+![image](https://s2.postimg.org/urwvo9m9l/tilialog_0_7_reduced.png)
 
 ## Instructions
 
@@ -17,9 +17,8 @@ Run as follows:
 
 ## Possible functional improvements
 
-* Real-time calculation
 * A settings screen
-* Round timestamps to 5 or 10 min or <setting>
+* Real-time calculation
 
 ## Possible technical improvements
 
@@ -28,7 +27,6 @@ Run as follows:
 
 ## Possible visual improvements
 
-* Input more like a spreadsheet
 * Improved text readability
 
 ## License

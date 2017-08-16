@@ -47,6 +47,7 @@ public class Report {
             }
             StringBuilder descriptionI = new StringBuilder()
                 .append(systemEOL)
+                .append("\t")
                 .append(logs.get(i).description());
             Duration durationI = logs.get(i).duration();
             for (int j = 0; j < logs.size(); j++) {
@@ -55,6 +56,7 @@ public class Report {
                 }
                 if (logs.get(i).storyCode().equals(logs.get(j).storyCode())) {
                     descriptionI.append(systemEOL)
+                        .append("\t")
                         .append(logs.get(j).description())
                     ;
                     durationI = durationI.plus(logs.get(j).duration());
