@@ -1,3 +1,9 @@
+# 0.8
+
+* Fix bug stamp time rounding through refactor
+* Is able to round stamps to a user chosen value
+* Unit tests for Clock
+
 # 0.7
 
 * Outputs report in a textarea

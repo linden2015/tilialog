@@ -7,16 +7,15 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.regex.Pattern;
-import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
@@ -27,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ScrollPaneLayout;
@@ -147,13 +147,15 @@ public class App implements Runnable {
     private class OptionsPanel {
         private JPanel panel = new JPanel();
         private JCheckBox combineStoriesCheckBox = new JCheckBox("Combine stories");
-        private JCheckBox roundStampToFivesCheckBox = new JCheckBox("Round stamp to fives");
+        private JLabel roundStampToLabel = new JLabel("Round stamp to:");
+        private JTextField roundStampToField = new JTextField("1", 3);
         private JButton generateReport = new JButton("Generate report");
         private JButton addEntryRow = new JButton("Add row");
         public OptionsPanel() {
             panel.setPreferredSize(new Dimension(800, 40));
             panel.add(combineStoriesCheckBox);
-            panel.add(roundStampToFivesCheckBox);
+            panel.add(roundStampToLabel);
+            panel.add(roundStampToField);
             addEntryRow.addActionListener(new AddEntryRowActionListener());
             panel.add(addEntryRow);
             generateReport.addActionListener(new GenerateReportActionListener());
@@ -165,8 +167,15 @@ public class App implements Runnable {
         private Boolean combineStoriesIsSelected() {
             return combineStoriesCheckBox.isSelected();
         }
-        private Boolean roundStampToFivesIsSelected() {
-            return roundStampToFivesCheckBox.isSelected();
+        private int roundStampToChoice() {
+            try {
+                return Integer.valueOf(roundStampToField.getText());
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException(
+                    "Unable to interpret as a number: "
+                    + roundStampToField.getText()
+                );
+            }
         }
         private class GenerateReportActionListener implements ActionListener {
             @Override
@@ -251,15 +260,20 @@ public class App implements Runnable {
         }
         private class stampTimeActionListener implements ActionListener {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                Clock clock = new Clock(LocalTime.now());
+            public void actionPerformed(ActionEvent ae) {
                 String now;
-                if (optionsPanel.roundStampToFivesIsSelected()) {
-                    now = clock.asStringRoundedToFives();
-                } else {
-                    now = clock.asString();
+                try {
+                    now = new Clock(LocalTime.now())
+                        .asStringRounded(
+                            optionsPanel.roundStampToChoice()
+                        )
+                    ;
+                } catch (IllegalArgumentException e) {
+                    JOptionPane.showMessageDialog(panel,
+                        e.getMessage()
+                    );
+                    return;
                 }
-
                 if (startedAt().length() == 0) {
                     startedAtField.setText(now);
                 } else if (endedAt().length() == 0) {

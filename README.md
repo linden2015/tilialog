@@ -18,7 +18,7 @@ Run as follows:
 ## Possible functional improvements
 
 * A settings screen
-* Real-time calculation
+* Rows are added automatically
 
 ## Possible technical improvements
 
