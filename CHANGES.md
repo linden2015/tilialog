@@ -1,3 +1,11 @@
+# 0.9
+
+* Refactored UI elements to separate classes
+* Refactored namespaces
+* Added menubar
+* Added settingspanel
+* Rows are added and removed based on number of empty rows
+
 # 0.8
 
 * Fix bug stamp time rounding through refactor

@@ -17,8 +17,8 @@ Run as follows:
 
 ## Possible functional improvements
 
-* A settings screen
-* Rows are added automatically
+* Persist settings
+* Add automated checks to project (run tests, unused imports)
 
 ## Possible technical improvements
 
