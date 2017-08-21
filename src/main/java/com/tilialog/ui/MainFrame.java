@@ -1,5 +1,6 @@
 package com.tilialog.ui;
 
+import com.tilialog.Settings;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 

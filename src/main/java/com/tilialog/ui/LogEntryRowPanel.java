@@ -2,14 +2,13 @@ package com.tilialog.ui;
 
 import com.tilialog.Clock;
 import com.tilialog.LogEntryRow;
+import com.tilialog.Settings;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.TextEvent;
-import java.awt.event.TextListener;
 import java.time.LocalTime;
 import java.util.Observable;
 import javax.swing.JButton;

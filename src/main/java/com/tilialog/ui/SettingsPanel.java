@@ -1,5 +1,6 @@
 package com.tilialog.ui;
 
+import com.tilialog.Settings;
 import java.awt.Dimension;
 import javax.swing.JLabel;
 import javax.swing.JPanel;

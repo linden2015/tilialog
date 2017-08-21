@@ -1,3 +1,8 @@
+# 0.10
+
+* Persist settings
+* About page has link to project site
+
 # 0.9
 
 * Refactored UI elements to separate classes

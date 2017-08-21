@@ -2,14 +2,14 @@
 
 A Java program that helps you log time.
 
-![image](https://s2.postimg.org/urwvo9m9l/tilialog_0_7_reduced.png)
+![image](https://s27.postimg.org/5qz87modf/tilialog_0_10_reduced.png)
 
 ## Instructions
 
 Run as follows:
 
     cd output
-    java App
+    java com/tilialog/App &
 
 ## Requirements
 
@@ -17,8 +17,8 @@ Run as follows:
 
 ## Possible functional improvements
 
-* Persist settings
 * Add automated checks to project (run tests, unused imports)
+* Notify user of new version
 
 ## Possible technical improvements
 

@@ -1,6 +1,7 @@
 package com.tilialog.ui;
 
 import com.tilialog.LogEntryRow;
+import com.tilialog.Settings;
 import com.tilialog.TextBackup;
 import java.awt.BorderLayout;
 import java.awt.Dimension;

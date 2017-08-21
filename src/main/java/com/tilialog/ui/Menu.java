@@ -1,7 +1,7 @@
 package com.tilialog.ui;
 
 import com.tilialog.Report;
-import java.awt.Dimension;
+import com.tilialog.Settings;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
@@ -25,15 +25,17 @@ public class Menu {
     private void buildUI() {
         JMenu optionsMenu = new JMenu("Options");
         JMenuItem titleMenuItem = new JMenuItem("Report");
-        titleMenuItem.addActionListener(new titleMenuItemActionListener());
+        titleMenuItem.addActionListener(new TitleMenuItemActionListener());
         optionsMenu.add(titleMenuItem);
         JMenuItem settingsMenuItem = new JMenuItem("Settings");
-        settingsMenuItem.addActionListener(new settingsMenuItemActionListener());
+        settingsMenuItem.addActionListener(new SettingsMenuItemActionListener());
         optionsMenu.add(settingsMenuItem);
         menuBar = new JMenuBar();
         menuBar.add(optionsMenu);
+        JMenuItem aboutMenuItem = new JMenuItem("About");
+        aboutMenuItem.addActionListener(new AboutMenuItemActionListener());
         JMenu otherMenu = new JMenu("Other");
-        otherMenu.add(new JMenuItem("About"));
+        otherMenu.add(aboutMenuItem);
         menuBar.add(otherMenu);
     }
 
@@ -41,7 +43,7 @@ public class Menu {
         return menuBar;
     }
 
-    private class titleMenuItemActionListener implements ActionListener {
+    private class TitleMenuItemActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent ae) {
             int answer = JOptionPane.showConfirmDialog(
@@ -90,7 +92,7 @@ public class Menu {
             }
         }
     }
-    private class settingsMenuItemActionListener implements ActionListener {
+    private class SettingsMenuItemActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent ae) {
             settingsPanel = new SettingsPanel(settings);
@@ -105,6 +107,14 @@ public class Menu {
                     settings.setRoundStampTo(settingsPanel.roundStampTo());
                     break;
             }
+        }
+    }
+    private class AboutMenuItemActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            JOptionPane.showMessageDialog(
+                menuBar, new AboutPanel().panel()
+            );
         }
     }
 }
