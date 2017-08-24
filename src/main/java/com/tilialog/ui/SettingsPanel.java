@@ -23,7 +23,12 @@ public class SettingsPanel {
         panel.add(new JLabel("Round stamps to: "));
         numberSpinner = new JSpinner(
             new SpinnerNumberModel(
-                settings.roundStampTo(), 1, 30, 1
+                Integer.valueOf(
+                    settings.get("stamp_rounds_to_minutes")
+                ).intValue(),
+                1,
+                30,
+                1
             )
         );
         panel.add(numberSpinner);

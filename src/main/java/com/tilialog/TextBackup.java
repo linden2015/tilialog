@@ -1,10 +1,11 @@
 package com.tilialog;
 
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 
 public class TextBackup {
+
     private Object obj;
 
     public TextBackup(Object obj) {
@@ -13,11 +14,14 @@ public class TextBackup {
 
     public void write() {
         try {
-            FileWriter fw = new FileWriter(
-                LocalDate.now().toString() + ".backup.txt", true
+            File file = new File(
+                LocalDate.now() + ".backup.txt"
             );
-            fw.append(obj.toString());
-            fw.close();
+            if (! file.exists()) {
+                file.createNewFile();
+            }
+            TextFile textFile = new TlTextFile(file);
+            textFile.append(obj.toString());
         } catch (IOException e) {
             throw new RuntimeException("Textbackup failed.", e);
         }

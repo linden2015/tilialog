@@ -63,9 +63,11 @@ public class LogEntryPanel implements Observer {
             new TimerTask() {
                 @Override
                 public void run() {
-                    new TextBackup(this).write();
+                    new TextBackup(LogEntryPanel.this).write();
                 }
-            }, 0, 300_000
+            },
+            0,
+            300_000
         );
     }
 
@@ -88,6 +90,7 @@ public class LogEntryPanel implements Observer {
         return logEntryRowPanels;
     }
 
+    @Override
     public String toString() {
         StringBuilder sbLog = new StringBuilder();
         sbLog.append("# EntryRows plain text report #")

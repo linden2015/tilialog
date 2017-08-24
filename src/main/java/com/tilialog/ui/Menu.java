@@ -11,9 +11,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 public class Menu {
+
     private JMenuBar menuBar;
+
     private LogEntryPanel logEntryPanel;
+
     private Settings settings;
+
     private SettingsPanel settingsPanel;
 
     public Menu(LogEntryPanel logEntryPanel, Settings settings) {
@@ -44,6 +48,7 @@ public class Menu {
     }
 
     private class TitleMenuItemActionListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent ae) {
             int answer = JOptionPane.showConfirmDialog(
@@ -67,7 +72,7 @@ public class Menu {
                         );
                     } catch (
                         IllegalArgumentException | IllegalStateException e
-                    ) {
+                        ) {
                         JOptionPane.showMessageDialog(menuBar, e.getMessage());
                     }
                     break;
@@ -85,7 +90,7 @@ public class Menu {
                         );
                     } catch (
                         IllegalArgumentException | IllegalStateException e
-                    ) {
+                        ) {
                         JOptionPane.showMessageDialog(menuBar, e.getMessage());
                     }
                     break;
@@ -93,6 +98,7 @@ public class Menu {
         }
     }
     private class SettingsMenuItemActionListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent ae) {
             settingsPanel = new SettingsPanel(settings);
@@ -104,12 +110,16 @@ public class Menu {
             );
             switch (answer) {
                 case JOptionPane.YES_OPTION:
-                    settings.setRoundStampTo(settingsPanel.roundStampTo());
+                    settings.put(
+                        "stamp_rounds_to_minutes",
+                        settingsPanel.roundStampTo()
+                    );
                     break;
             }
         }
     }
     private class AboutMenuItemActionListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent ae) {
             JOptionPane.showMessageDialog(

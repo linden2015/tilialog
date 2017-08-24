@@ -15,18 +15,13 @@ Run as follows:
 
 * Java 1.8+
 
-## Possible functional improvements
+## Backlog
 
-* Add automated checks to project (run tests, unused imports)
+* Make the app a Maven project
+* Make the build self-testing ( https://en.wikipedia.org/wiki/Continuous_integration#Make_the_build_self-testing )
 * Notify user of new version
-
-## Possible technical improvements
-
-* Dependency injection
+* Dependency injection. Entire app is built in main.
 * UI testing
-
-## Possible visual improvements
-
 * Improved text readability
 
 ## License

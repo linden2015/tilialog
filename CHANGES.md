@@ -1,3 +1,9 @@
+# 0.11
+
+* Settings refactored from serialized object to plain text file
+* Started with interfaces, fakes and testing with fakes
+* Fixed bug textbackup: anonymous object needed to reference outer object
+
 # 0.10
 
 * Persist settings

@@ -1,8 +1,8 @@
 package com.tilialog;
 
 import com.tilialog.ui.MainFrame;
-import javax.swing.SwingUtilities;
 import java.io.File;
+import javax.swing.SwingUtilities;
 
 public class App implements Runnable {
     private MainFrame mainFrame;
@@ -20,8 +20,10 @@ public class App implements Runnable {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(
             new App(
-                new Settings(
-                    new File("settings.ser")
+                new TlSettings(
+                    new TlTextFile(
+                        new File("settings.list")
+                    )
                 )
             )
         );

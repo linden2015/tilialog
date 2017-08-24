@@ -76,8 +76,13 @@ public class LogEntryRowPanel extends Observable implements LogEntryRow {
         public void actionPerformed(ActionEvent ae) {
             String now;
             try {
-                now = new Clock(LocalTime.now())
-                    .asStringRounded(settings.roundStampTo());
+                now = new Clock(
+                    LocalTime.now()
+                ).asStringRounded(
+                    Integer.valueOf(
+                        settings.get("stamp_rounds_to_minutes")
+                    )
+                );
             } catch (IllegalArgumentException e) {
                 JOptionPane.showMessageDialog(panel, e.getMessage());
                 return;

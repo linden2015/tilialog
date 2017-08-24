@@ -22,8 +22,6 @@ public class Report {
         sb.append("Time spent per story").append(EOL + EOL);
         Duration totalTime = Duration.ZERO;
         for (Log log : validatedLogEntries()) {
-            //sb.append(log.storyCode() + ": ")
-                //.append(log.duration().getSeconds() / 60 + " min ")
             sb.append(log.toString())
                 .append(EOL);
             totalTime = totalTime.plus(log.duration());

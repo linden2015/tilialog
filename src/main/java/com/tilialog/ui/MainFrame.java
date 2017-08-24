@@ -20,7 +20,10 @@ public class MainFrame {
         menu = new Menu(logEntryPanel, settings);
         frame = new JFrame("TiliaLog");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(settings.mainFrameSize());
+        frame.setSize(
+            Integer.valueOf(settings.get("main_frame_size_w")),
+            Integer.valueOf(settings.get("main_frame_size_h"))
+        );
         frame.setLocationRelativeTo(null);
         frame.setJMenuBar(menu.menu());
         frame.add(logEntryPanel.panel());
