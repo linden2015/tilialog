@@ -4,6 +4,16 @@ A Java program that helps you log time.
 
 ![image](https://s27.postimg.org/5qz87modf/tilialog_0_10_reduced.png)
 
+## Features
+
+* Add current timestamp to a story on button click
+* Current timestamp can be rounded to user defined number of minutes
+* User defined number of minutes is stored as setting
+* Calculates total time of stories with the same name (optional)
+* Calculates total time of all stories
+* Writes a backup of all fields to a text file every 5 minutes
+* Outputs a report as an editable textfield
+
 ## Instructions
 
 Run compiled code:
