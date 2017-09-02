@@ -11,9 +11,10 @@ Run as follows:
     cd output
     java com/tilialog/App &
 
-## Requirements
+## Dependencies
 
-* Java 1.8+
+* Java 1.8
+* Maven 3.3.9
 
 ## Backlog
 

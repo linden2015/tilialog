@@ -2,18 +2,19 @@ package com.tilialog;
 
 import java.io.File;
 import java.io.IOException;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class TlTextFileTest {
 
     @Test
     public void readAll() throws IOException {
-        assertEquals(
-            "# Settingsfile",
+        MatcherAssert.assertThat(
             new TlTextFile(
                 new File("settings.list")
-            ).readAll().substring(0,14)
+            ).readAll(),
+            Matchers.containsString("# Settingsfile")
         );
     }
 
@@ -24,7 +25,7 @@ public class TlTextFileTest {
             file.createNewFile();
             TextFile textFile = new TlTextFile(file);
             textFile.replaceAll("110011");
-            assertEquals("110011", textFile.readAll());
+            MatcherAssert.assertThat(textFile.readAll(), Matchers.equalTo("110011"));
         } finally {
             file.delete();
         }
@@ -38,7 +39,7 @@ public class TlTextFileTest {
             TextFile textFile = new TlTextFile(file);
             textFile.replaceAll("110011");
             textFile.append("2");
-            assertEquals("1100112", textFile.readAll());
+            MatcherAssert.assertThat(textFile.readAll(), Matchers.equalTo("1100112"));
         } finally {
             file.delete();
         }

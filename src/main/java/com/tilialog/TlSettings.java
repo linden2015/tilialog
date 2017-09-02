@@ -27,7 +27,7 @@ public class TlSettings implements Settings {
             ! key.matches(testKeyPattern) ||
                 ! valueAsString.matches(testValuePattern)
             ) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                 "Settings key or value incorrectly formatted."
             );
         }

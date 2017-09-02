@@ -1,51 +1,63 @@
 package com.tilialog;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import java.io.File;
 
 public class TlSettingsTest {
 
     @Test
     public void get() {
-        assertEquals(
-            "925",
+        MatcherAssert.assertThat(
             new TlSettings(
                 new TlTextFile(
                     new File("settings.list")
                 )
-            ).get("main_frame_size_w")
+            ).get("main_frame_size_w"),
+            Matchers.equalTo("925")
         );
-        assertEquals(
-            "525",
+        MatcherAssert.assertThat(
             new TlSettings(
                 new TlTextFile(
                     new File("settings.list")
                 )
-            ).get("main_frame_size_h")
+            ).get("main_frame_size_h"),
+            Matchers.equalTo("525")
         );
-        assertEquals(
-            "5",
+        MatcherAssert.assertThat(
             new TlSettings(
                 new TlTextFile(
                     new File("settings.list")
                 )
-            ).get("stamp_rounds_to_minutes")
+            ).get("stamp_rounds_to_minutes"),
+            Matchers.equalTo("5")
         );
     }
 
     @Test
     public void put() {
+
+        // Put a digit
         TlSettings settings = new TlSettings(
             new FkTextFile("a=1\nb=2\nc=3")
         );
         settings.put("a", "2");
-        assertEquals("2", settings.get("a"));
+        MatcherAssert.assertThat(settings.get("a"), Matchers.equalTo("2"));
 
-        TlSettings settings3 = new TlSettings(
+        // Put a letter
+        TlSettings settings2 = new TlSettings(
             new FkTextFile("a=1\nb=2\nc=3")
         );
-        settings3.put("b", "d");
-        assertEquals("d", settings3.get("b"));
+        settings2.put("b", "d");
+        MatcherAssert.assertThat(settings2.get("b"), Matchers.equalTo("d"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void illegal_argument() {
+        TlSettings settings = new TlSettings(
+            new FkTextFile("a=1\nb=2\nc=3")
+        );
+        settings.put("a", "1 1");
     }
 }
