@@ -6,14 +6,17 @@ A Java program that helps you log time.
 
 ## Instructions
 
-Run as follows:
+Run compiled code:
 
     java -jar target/tilialog-0.12.jar
+
+Build from source:
+
+    mvn test exec:java
 
 ## Dependencies
 
 * Java 1.8
-* Maven 3.3.9
 
 ## Backlog
 
