@@ -12,7 +12,7 @@ public class TlSettingsTest {
         MatcherAssert.assertThat(
             new TlSettings(
                 new TlTextFile(
-                    new File("settings.list")
+                    new File("settings.list.dist")
                 )
             ).get("main_frame_size_w"),
             Matchers.equalTo("925")
@@ -20,7 +20,7 @@ public class TlSettingsTest {
         MatcherAssert.assertThat(
             new TlSettings(
                 new TlTextFile(
-                    new File("settings.list")
+                    new File("settings.list.dist")
                 )
             ).get("main_frame_size_h"),
             Matchers.equalTo("525")
@@ -28,7 +28,7 @@ public class TlSettingsTest {
         MatcherAssert.assertThat(
             new TlSettings(
                 new TlTextFile(
-                    new File("settings.list")
+                    new File("settings.list.dist")
                 )
             ).get("stamp_rounds_to_minutes"),
             Matchers.equalTo("5")

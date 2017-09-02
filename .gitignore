@@ -1,3 +1,5 @@
 *.backup.txt
 settings.ser
-/target/
+/target/*
+!/target/tilialog*.jar
+dependency-reduced-pom.xml
