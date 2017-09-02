@@ -47,7 +47,7 @@ public class Report {
             }
             StringBuilder descriptionI = new StringBuilder()
                 .append(EOL)
-                .append("\t")
+                .append("    ")
                 .append(logs.get(i).toString());
             Duration durationI = logs.get(i).duration();
             for (int j = 0; j < logs.size(); j++) {
@@ -57,7 +57,7 @@ public class Report {
                 if (logs.get(i).storyCode().equals(logs.get(j).storyCode())) {
                     descriptionI
                         .append(EOL)
-                        .append("\t")
+                        .append("    ")
                         .append(logs.get(j).toString());
                     durationI = durationI.plus(logs.get(j).duration());
                     appliedLogs.add(j);
@@ -83,10 +83,12 @@ public class Report {
         // Parse log entries into a list of logs
         ArrayList<Log> logs = new ArrayList<>();
         for (LogEntryRow entry : logEntryRows) {
+
             // Skip empty entries
             if (entry.isEmpty()) {
                 continue;
             }
+
             // Parse time elements
             LocalTime parsedStartedAt;
             LocalTime parsedEndedAt;
@@ -99,15 +101,18 @@ public class Report {
                         + e.getParsedString()
                 );
             }
+
             // Add new log to list
             logs.add(new Log(
                 entry.story(), parsedStartedAt, parsedEndedAt, entry.description()
             ));
         }
+
         // Check for at least one log
         if (logs.size() == 0) {
             throw new IllegalStateException("There are no logs.");
         }
+
         // Check for overlap between logs
         logs.sort(null);
         Iterator<Log> logsIterator = logs.iterator();

@@ -8,8 +8,7 @@ A Java program that helps you log time.
 
 Run as follows:
 
-    cd output
-    java com/tilialog/App &
+    java -jar target/tilialog-0.12.jar
 
 ## Dependencies
 
@@ -18,8 +17,6 @@ Run as follows:
 
 ## Backlog
 
-* Make the app a Maven project
-* Make the build self-testing ( https://en.wikipedia.org/wiki/Continuous_integration#Make_the_build_self-testing )
 * Notify user of new version
 * Dependency injection. Entire app is built in main.
 * UI testing

@@ -62,14 +62,15 @@ public class Log implements Comparable<Log> {
     public String toString() {
         return new StringBuilder()
             .append(storyCode())
-            .append(", ")
+            .append(". ")
             .append(startTime.format(DateTimeFormatter.ofPattern("HH:mm")))
             .append(" - ")
             .append(endTime.format(DateTimeFormatter.ofPattern("HH:mm")))
-            .append(", ")
+            .append(". ")
             .append(description())
-            .append(", ")
+            .append(". ")
             .append(duration().getSeconds() / 60 + " min")
+            .append(".")
             .toString();
     }
 
