@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Set;
 
 public class Report {
+
     public static String EOL = System.getProperty("line.separator");
+
     private List<LogEntryRow> logEntryRows;
 
     public Report(List<LogEntryRow> logEntryRows) {

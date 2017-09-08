@@ -97,6 +97,7 @@ public class Menu {
             }
         }
     }
+
     private class SettingsMenuItemActionListener implements ActionListener {
 
         @Override
@@ -118,6 +119,7 @@ public class Menu {
             }
         }
     }
+
     private class AboutMenuItemActionListener implements ActionListener {
 
         @Override

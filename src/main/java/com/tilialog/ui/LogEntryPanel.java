@@ -1,12 +1,15 @@
 package com.tilialog.ui;
 
 import com.tilialog.LogEntryRow;
+import com.tilialog.PersistedLogEntryRows;
 import com.tilialog.Settings;
 import com.tilialog.TextBackup;
+import com.tilialog.TlLogEntryRow;
+import com.tilialog.TlTextFile;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.time.LocalDateTime;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -19,43 +22,66 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 public class LogEntryPanel implements Observer {
+
     public static String EOL = System.getProperty("line.separator");
+
     private JPanel totalPanel;
-    private JPanel entryPanel;
+
+    private JPanel entryPanel = null;
+
     private JScrollPane scrollPanel;
-    private List<LogEntryRow> logEntryRowPanels = new ArrayList<>();
-    private int ENTRY_ROW_PANEL_STARTING_COUNT = 3;
+
+    private List<LogEntryRowPanel> logEntryRowPanels = new ArrayList<>();
+
     private Settings settings;
+
+    private PersistedLogEntryRows persistedLogEntryRows;
 
     public LogEntryPanel(Settings settings) {
         this.settings = settings;
+        persistedLogEntryRows = new PersistedLogEntryRows(
+            new TlTextFile(
+                new File("log-entry-rows.list")
+            ),
+            ";;;"
+        );
         buildUI();
         startBackup();
     }
 
     private void buildUI() {
         entryPanel = new JPanel();
+        entryPanel.setLayout(new FlowLayout());
+        entryPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        for (LogEntryRow row : persistedLogEntryRows.load()) {
+            addLogEntryRowPanel(row);
+        }
         scrollPanel = new JScrollPane(
             entryPanel,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
         );
-        entryPanel.setLayout(new FlowLayout());
-        entryPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        for (int i = 1; i <= ENTRY_ROW_PANEL_STARTING_COUNT; i++) {
-            addLogEntryRowPanel();
-        }
         totalPanel = new JPanel(new BorderLayout());
         totalPanel.add(new TitlePanel().panel(), BorderLayout.NORTH);
         totalPanel.add(scrollPanel, BorderLayout.CENTER);
+        determineAndApplyEmptyRows();
     }
 
-    private void addLogEntryRowPanel() {
-        LogEntryRowPanel logEntryRowPanel = new LogEntryRowPanel(settings);
+    private void addLogEntryRowPanel(LogEntryRow row) {
+        LogEntryRowPanel logEntryRowPanel = new LogEntryRowPanel(settings, row);
         entryPanel.add(logEntryRowPanel.panel());
         logEntryRowPanels.add(logEntryRowPanel);
         logEntryRowPanel.addObserver(this);
         resizeEntryPanel();
+    }
+
+    private void resizeEntryPanel() {
+        entryPanel.setPreferredSize(
+            new Dimension(
+                840,
+                entryPanel.getComponentCount() * 40
+            )
+        );
     }
 
     private void startBackup() {
@@ -71,12 +97,6 @@ public class LogEntryPanel implements Observer {
         );
     }
 
-    private void resizeEntryPanel() {
-        entryPanel.setPreferredSize(new Dimension(
-            840, entryPanel.getComponentCount() * 40
-        ));
-    }
-
     private void redraw() {
         totalPanel.validate();
         totalPanel.repaint();
@@ -86,10 +106,13 @@ public class LogEntryPanel implements Observer {
         return totalPanel;
     }
 
+    /*
     public List<LogEntryRow> logEntryRows() {
         return logEntryRowPanels;
     }
+    */
 
+    /*
     @Override
     public String toString() {
         StringBuilder sbLog = new StringBuilder();
@@ -97,31 +120,32 @@ public class LogEntryPanel implements Observer {
             .append(EOL);
         sbLog.append("Local datetime: " + LocalDateTime.now().toString())
             .append(EOL);
-        for (LogEntryRow entry : logEntryRowPanels) {
-            if (! entry.isEmpty()) {
+        for (LogEntryRowPanel entryPanel : logEntryRowPanels) {
+            if (! entryPanel.isEmpty()) {
                 sbLog.append(entry.toString());
             }
         }
         return sbLog.toString();
     }
+    */
 
-    private void addOrRemoveRows() {
+    private void determineAndApplyEmptyRows() {
         int emptyCount = 0;
-        LogEntryRow lastEmptyRow = null;
-        for (LogEntryRow row : logEntryRowPanels) {
-            if (row.isEmpty()) {
+        LogEntryRowPanel lastEmptyRowPanel = null;
+        for (LogEntryRowPanel rowPanel : logEntryRowPanels) {
+            if (rowPanel.logEntryRow().isEmpty()) {
                 emptyCount++;
-                lastEmptyRow = row;
+                lastEmptyRowPanel = rowPanel;
             }
         }
         if (emptyCount < 3) {
-            addLogEntryRowPanel();
+            addLogEntryRowPanel(new TlLogEntryRow("", "", "", ""));
             redraw();
         }
         if (emptyCount > 3) {
-            ((LogEntryRowPanel) lastEmptyRow).deleteObserver(this);
-            logEntryRowPanels.remove(lastEmptyRow);
-            entryPanel.remove(((LogEntryRowPanel) lastEmptyRow).panel());
+            ((LogEntryRowPanel) lastEmptyRowPanel).deleteObserver(this);
+            logEntryRowPanels.remove(lastEmptyRowPanel);
+            entryPanel.remove(((LogEntryRowPanel) lastEmptyRowPanel).panel());
             redraw();
         }
     }
@@ -129,7 +153,16 @@ public class LogEntryPanel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof LogEntryRowPanel) {
-            addOrRemoveRows();
+            determineAndApplyEmptyRows();
+            persistedLogEntryRows.save(logEntryRows());
         }
+    }
+
+    public List<LogEntryRow> logEntryRows() {
+        List<LogEntryRow> rows = new ArrayList<>();
+        for (LogEntryRowPanel panel : logEntryRowPanels) {
+            rows.add(panel.logEntryRow());
+        }
+        return rows;
     }
 }
