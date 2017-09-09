@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tilialog</groupId>
     <artifactId>tilialog</artifactId>
-    <version>0.12</version>
+    <version>0.13</version>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -34,19 +34,19 @@
     <build>
         <plugins>
             <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.6.0</version>
-            <executions>
-                <execution>
-                <goals>
-                    <goal>java</goal>
-                </goals>
-                </execution>
-            </executions>
-            <configuration>
-                <mainClass>com.tilialog.App</mainClass>
-            </configuration>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                    <goals>
+                        <goal>java</goal>
+                    </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.tilialog.App</mainClass>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

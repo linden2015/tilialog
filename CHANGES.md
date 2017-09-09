@@ -1,5 +1,11 @@
 # Changes
 
+## 0.13
+
+* Log entry rows are saved to file on each change, and loaded on application start. This replaces
+the timed text backup.
+*
+
 ## 0.12
 
 * Refactored project into single jar package using mvn shade plugin. This runs all tests during

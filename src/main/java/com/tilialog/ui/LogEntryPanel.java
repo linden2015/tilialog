@@ -3,7 +3,6 @@ package com.tilialog.ui;
 import com.tilialog.LogEntryRow;
 import com.tilialog.PersistedLogEntryRows;
 import com.tilialog.Settings;
-import com.tilialog.TextBackup;
 import com.tilialog.TlLogEntryRow;
 import com.tilialog.TlTextFile;
 import java.awt.BorderLayout;
@@ -14,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -46,7 +43,6 @@ public class LogEntryPanel implements Observer {
             ";;;"
         );
         buildUI();
-        startBackup();
     }
 
     private void buildUI() {
@@ -84,19 +80,6 @@ public class LogEntryPanel implements Observer {
         );
     }
 
-    private void startBackup() {
-        new Timer(true).scheduleAtFixedRate(
-            new TimerTask() {
-                @Override
-                public void run() {
-                    new TextBackup(LogEntryPanel.this).write();
-                }
-            },
-            0,
-            300_000
-        );
-    }
-
     private void redraw() {
         totalPanel.validate();
         totalPanel.repaint();
@@ -105,29 +88,6 @@ public class LogEntryPanel implements Observer {
     public JPanel panel() {
         return totalPanel;
     }
-
-    /*
-    public List<LogEntryRow> logEntryRows() {
-        return logEntryRowPanels;
-    }
-    */
-
-    /*
-    @Override
-    public String toString() {
-        StringBuilder sbLog = new StringBuilder();
-        sbLog.append("# EntryRows plain text report #")
-            .append(EOL);
-        sbLog.append("Local datetime: " + LocalDateTime.now().toString())
-            .append(EOL);
-        for (LogEntryRowPanel entryPanel : logEntryRowPanels) {
-            if (! entryPanel.isEmpty()) {
-                sbLog.append(entry.toString());
-            }
-        }
-        return sbLog.toString();
-    }
-    */
 
     private void determineAndApplyEmptyRows() {
         int emptyCount = 0;
@@ -141,11 +101,12 @@ public class LogEntryPanel implements Observer {
         if (emptyCount < 3) {
             addLogEntryRowPanel(new TlLogEntryRow("", "", "", ""));
             redraw();
+            determineAndApplyEmptyRows();
         }
         if (emptyCount > 3) {
-            ((LogEntryRowPanel) lastEmptyRowPanel).deleteObserver(this);
+            lastEmptyRowPanel.deleteObserver(this);
             logEntryRowPanels.remove(lastEmptyRowPanel);
-            entryPanel.remove(((LogEntryRowPanel) lastEmptyRowPanel).panel());
+            entryPanel.remove(lastEmptyRowPanel.panel());
             redraw();
         }
     }
@@ -164,5 +125,13 @@ public class LogEntryPanel implements Observer {
             rows.add(panel.logEntryRow());
         }
         return rows;
+    }
+
+    public void clearLogEntryRows() {
+        for (LogEntryRowPanel logEntryRowPanel : logEntryRowPanels){
+            logEntryRowPanel.clearAll();
+        }
+        determineAndApplyEmptyRows();
+        persistedLogEntryRows.save(logEntryRows());
     }
 }

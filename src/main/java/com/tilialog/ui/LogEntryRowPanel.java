@@ -1,7 +1,6 @@
 package com.tilialog.ui;
 
 import com.tilialog.Clock;
-import com.tilialog.Log;
 import com.tilialog.LogEntryRow;
 import com.tilialog.Settings;
 import com.tilialog.TlLogEntryRow;
@@ -104,6 +103,13 @@ public class LogEntryRowPanel extends Observable {
 
     public JPanel panel() {
         return panel;
+    }
+
+    public void clearAll() {
+        storyField.setText("");
+        startedAtField.setText("");
+        endedAtField.setText("");
+        descriptionField.setText("");
     }
 
     public LogEntryRow logEntryRow() {

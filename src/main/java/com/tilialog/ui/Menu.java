@@ -28,12 +28,19 @@ public class Menu {
 
     private void buildUI() {
         JMenu optionsMenu = new JMenu("Options");
-        JMenuItem titleMenuItem = new JMenuItem("Report");
-        titleMenuItem.addActionListener(new TitleMenuItemActionListener());
-        optionsMenu.add(titleMenuItem);
+
+        JMenuItem reportMenuItem = new JMenuItem("Report");
+        reportMenuItem.addActionListener(new ReportMenuItemActionListener());
+        optionsMenu.add(reportMenuItem);
+
+        JMenuItem clearMenuItem = new JMenuItem("Clear form");
+        clearMenuItem.addActionListener(new ClearMenuItemActionListener());
+        optionsMenu.add(clearMenuItem);
+
         JMenuItem settingsMenuItem = new JMenuItem("Settings");
         settingsMenuItem.addActionListener(new SettingsMenuItemActionListener());
         optionsMenu.add(settingsMenuItem);
+
         menuBar = new JMenuBar();
         menuBar.add(optionsMenu);
         JMenuItem aboutMenuItem = new JMenuItem("About");
@@ -47,7 +54,23 @@ public class Menu {
         return menuBar;
     }
 
-    private class TitleMenuItemActionListener implements ActionListener {
+    private class ClearMenuItemActionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            int answer = JOptionPane.showConfirmDialog(
+                menuBar,
+                "Clear entire form?",
+                "Clear",
+                JOptionPane.OK_CANCEL_OPTION
+            );
+            if (answer == JOptionPane.OK_OPTION) {
+                logEntryPanel.clearLogEntryRows();
+            }
+        }
+    }
+
+    private class ReportMenuItemActionListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
