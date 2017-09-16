@@ -1,9 +1,10 @@
 package com.tilialog.ui;
 
 import com.tilialog.Clock;
+import com.tilialog.Log;
 import com.tilialog.LogEntryRow;
 import com.tilialog.Settings;
-import com.tilialog.TlLogEntryRow;
+import com.tilialog.TlLog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -112,8 +113,16 @@ public class LogEntryRowPanel extends Observable {
         descriptionField.setText("");
     }
 
-    public LogEntryRow logEntryRow() {
-        return new TlLogEntryRow(
+    public boolean isEmpty() {
+        return storyField.getText().isEmpty()
+            && startedAtField.getText().isEmpty()
+            && endedAtField.getText().isEmpty()
+            && descriptionField.getText().isEmpty()
+        ;
+    }
+
+    public Log log() {
+        return new TlLog(
             storyField.getText(),
             startedAtField.getText(),
             endedAtField.getText(),

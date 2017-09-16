@@ -1,7 +1,10 @@
 package com.tilialog.ui;
 
+import com.tilialog.DefaultLogs;
+import com.tilialog.Log;
 import com.tilialog.LogEntryRow;
-import com.tilialog.PersistedLogEntryRows;
+import com.tilialog.Logs;
+import com.tilialog.PersistedLogs;
 import com.tilialog.Settings;
 import com.tilialog.TlLogEntryRow;
 import com.tilialog.TlTextFile;
@@ -32,15 +35,15 @@ public class LogEntryPanel implements Observer {
 
     private Settings settings;
 
-    private PersistedLogEntryRows persistedLogEntryRows;
+    private PersistedLogs persistedLogs;
 
     public LogEntryPanel(Settings settings) {
         this.settings = settings;
-        persistedLogEntryRows = new PersistedLogEntryRows(
+        persistedLogs = new PersistedLogs(
             new TlTextFile(
                 new File("log-entry-rows.list")
             ),
-            new String(new byte[] {0x1E})
+            new String(new byte[]{0x1E})
         );
         buildUI();
     }
@@ -49,7 +52,7 @@ public class LogEntryPanel implements Observer {
         entryPanel = new JPanel();
         entryPanel.setLayout(new FlowLayout());
         entryPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        for (LogEntryRow row : persistedLogEntryRows.load()) {
+        for (LogEntryRow row : persistedLogs.load()) {
             addLogEntryRowPanel(row);
         }
         scrollPanel = new JScrollPane(
@@ -93,7 +96,7 @@ public class LogEntryPanel implements Observer {
         int emptyCount = 0;
         LogEntryRowPanel lastEmptyRowPanel = null;
         for (LogEntryRowPanel rowPanel : logEntryRowPanels) {
-            if (rowPanel.logEntryRow().isEmpty()) {
+            if (rowPanel.isEmpty()) {
                 emptyCount++;
                 lastEmptyRowPanel = rowPanel;
             }
@@ -106,13 +109,10 @@ public class LogEntryPanel implements Observer {
             determineAndApplyEmptyRows();
         } else {
             lastEmptyRowPanel.deleteObserver(this);
-
             // Remove the row-panel from the list
             logEntryRowPanels.remove(lastEmptyRowPanel);
-
             // Remove the row-panel from the parent panel
             entryPanel.remove(lastEmptyRowPanel.panel());
-
             redraw();
             determineAndApplyEmptyRows();
         }
@@ -122,23 +122,23 @@ public class LogEntryPanel implements Observer {
     public void update(Observable o, Object arg) {
         if (o instanceof LogEntryRowPanel) {
             determineAndApplyEmptyRows();
-            persistedLogEntryRows.save(logEntryRows());
+            persistedLogs.save(logs());
         }
     }
 
-    public List<LogEntryRow> logEntryRows() {
-        List<LogEntryRow> rows = new ArrayList<>();
+    public Logs logs() {
+        List<Log> logs = new ArrayList<>();
         for (LogEntryRowPanel panel : logEntryRowPanels) {
-            rows.add(panel.logEntryRow());
+            logs.add(panel.log());
         }
-        return rows;
+        return new DefaultLogs(logs);
     }
 
     public void clearLogEntryRows() {
-        for (LogEntryRowPanel logEntryRowPanel : logEntryRowPanels){
+        for (LogEntryRowPanel logEntryRowPanel : logEntryRowPanels) {
             logEntryRowPanel.clearAll();
         }
         determineAndApplyEmptyRows();
-        persistedLogEntryRows.save(logEntryRows());
+        persistedLogs.save(logs());
     }
 }

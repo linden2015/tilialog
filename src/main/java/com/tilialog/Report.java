@@ -1,11 +1,7 @@
 package com.tilialog;
 
 import java.time.Duration;
-import java.time.format.DateTimeParseException;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -13,17 +9,17 @@ public class Report {
 
     public static String EOL = System.getProperty("line.separator");
 
-    private List<LogEntryRow> logEntryRows;
+    private List<Log> logs;
 
-    public Report(List<LogEntryRow> logEntryRows) {
-        this.logEntryRows = logEntryRows;
+    public Report(Logs logs) {
+        this.logs = logs.get();
     }
 
     public String regularAsString() throws IllegalArgumentException, IllegalStateException {
         StringBuilder sb = new StringBuilder();
         sb.append("Time spent per story").append(EOL + EOL);
         Duration totalTime = Duration.ZERO;
-        for (Log log : validatedLogEntries()) {
+        for (Log log : logs) {
             sb.append(log.toString())
                 .append(EOL);
             totalTime = totalTime.plus(log.duration());
@@ -41,7 +37,6 @@ public class Report {
         StringBuilder sb = new StringBuilder();
         sb.append("Time spent per story").append(EOL + EOL);
         Duration totalTime = Duration.ZERO;
-        List<Log> logs = validatedLogEntries();
         Set<Integer> appliedLogs = new HashSet<>();
         for (int i = 0; i < logs.size(); i++) {
             if (appliedLogs.contains(i)) {
@@ -79,56 +74,5 @@ public class Report {
                 (totalTime.getSeconds() % 3600) / 60)
             );
         return sb.toString();
-    }
-
-    private List<Log> validatedLogEntries() {
-        // Parse log entries into a list of logs
-        ArrayList<Log> logs = new ArrayList<>();
-        for (LogEntryRow entry : logEntryRows) {
-
-            // Skip empty entries
-            if (entry.isEmpty()) {
-                continue;
-            }
-
-            // Parse time elements
-            LocalTime parsedStartedAt;
-            LocalTime parsedEndedAt;
-            try {
-                parsedStartedAt = LocalTime.parse(entry.startedAt());
-                parsedEndedAt = LocalTime.parse(entry.endedAt());
-            } catch (DateTimeParseException e) {
-                throw new IllegalArgumentException(
-                    "The text could not be understood as a time: "
-                        + e.getParsedString()
-                );
-            }
-
-            // Add new log to list
-            logs.add(new Log(
-                entry.story(), parsedStartedAt, parsedEndedAt, entry.description()
-            ));
-        }
-
-        // Check for at least one log
-        if (logs.size() == 0) {
-            throw new IllegalStateException("There are no logs.");
-        }
-
-        // Check for overlap between logs
-        logs.sort(null);
-        Iterator<Log> logsIterator = logs.iterator();
-        Log currentLog = logsIterator.next();
-        while (logsIterator.hasNext()) {
-            Log nextLog = logsIterator.next();
-            if (currentLog.overlaps(nextLog)) {
-                throw new IllegalStateException(
-                    "Two logs are overlapping: "
-                        + currentLog.toString() + " and " + nextLog.toString()
-                );
-            }
-            currentLog = nextLog;
-        }
-        return logs;
     }
 }

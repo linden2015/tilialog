@@ -1,7 +1,11 @@
 package com.tilialog.ui;
 
+import com.tilialog.AtLeastOneLogs;
+import com.tilialog.NonEmptyLogs;
+import com.tilialog.NonOverlappingLogs;
 import com.tilialog.Report;
 import com.tilialog.Settings;
+import com.tilialog.ValidatedLogs;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
@@ -87,15 +91,21 @@ public class Menu {
                             menuBar,
                             new JTextArea(
                                 new Report(
-                                    logEntryPanel.logEntryRows()
+                                    new AtLeastOneLogs(
+                                        new NonOverlappingLogs(
+                                            new ValidatedLogs(
+                                                new NonEmptyLogs(
+                                                    logEntryPanel.logs()
+                                                )
+                                            )
+                                        )
+                                    )
                                 ).combinedAsString(),
                                 20,
                                 50
                             )
                         );
-                    } catch (
-                        IllegalArgumentException | IllegalStateException e
-                        ) {
+                    } catch (IllegalArgumentException | IllegalStateException e) {
                         JOptionPane.showMessageDialog(menuBar, e.getMessage());
                     }
                     break;
@@ -105,15 +115,19 @@ public class Menu {
                             menuBar,
                             new JTextArea(
                                 new Report(
-                                    logEntryPanel.logEntryRows()
+                                    new AtLeastOneLogs(
+                                        new NonOverlappingLogs(
+                                            new ValidatedLogs(
+                                                new NonEmptyLogs(logEntryPanel.logs())
+                                            )
+                                        )
+                                    )
                                 ).regularAsString(),
                                 20,
                                 50
                             )
                         );
-                    } catch (
-                        IllegalArgumentException | IllegalStateException e
-                        ) {
+                    } catch (IllegalArgumentException | IllegalStateException e) {
                         JOptionPane.showMessageDialog(menuBar, e.getMessage());
                     }
                     break;

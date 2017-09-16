@@ -4,30 +4,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersistedLogEntryRows {
+public class PersistedLogs {
 
     private TextFile textFile;
 
     private String deliniator;
 
-    public PersistedLogEntryRows(TextFile textFile, String deliniator) {
+    public PersistedLogs(TextFile textFile, String deliniator) {
         this.textFile = textFile;
         this.deliniator = deliniator;
     }
 
-    public void save(List<LogEntryRow> logEntryRows) {
+    public void save(Logs logs) {
         StringBuilder rows = new StringBuilder();
-        for (int i = 0; i < logEntryRows.size(); i++) {
-            rows
-                .append(logEntryRows.get(i).story()).append(deliniator)
-                .append(logEntryRows.get(i).startedAt()).append(deliniator)
-                .append(logEntryRows.get(i).endedAt()).append(deliniator)
-                .append(logEntryRows.get(i).description());
-
-            // No trailing deliniator
-            if (true || i < logEntryRows.size() - 1) {
-                rows.append(deliniator);
-            }
+        for (int i = 0; i < logs.get().size(); i++) {
+            Log log = logs.get().get(i);
+            rows.append(log.storyCode()).append(deliniator)
+                .append(log.startedAt()).append(deliniator)
+                .append(log.endedAt()).append(deliniator)
+                .append(log.description()).append(deliniator)
+            ;
         }
         try {
             textFile.replaceAll(rows.toString());

@@ -8,7 +8,7 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
-public class PersistedLogEntryRowsTest {
+public class PersistedLogsTest {
 
     @Test
     public void list() {
@@ -28,7 +28,7 @@ public class PersistedLogEntryRowsTest {
 
     @Test
     public void load_none() {
-        List<LogEntryRow> rows = new PersistedLogEntryRows(
+        List<LogEntryRow> rows = new PersistedLogs(
             new FkTextFile(""),
             ","
         ).load();
@@ -37,7 +37,7 @@ public class PersistedLogEntryRowsTest {
 
     @Test
     public void load_one() {
-        List<LogEntryRow> rows = new PersistedLogEntryRows(
+        List<LogEntryRow> rows = new PersistedLogs(
             new FkTextFile("a,b,c,d,"),
             ","
         ).load();
@@ -50,7 +50,7 @@ public class PersistedLogEntryRowsTest {
 
     @Test
     public void load_many() {
-        List<LogEntryRow> rows = new PersistedLogEntryRows(
+        List<LogEntryRow> rows = new PersistedLogs(
             new FkTextFile("a,b,c,d,e,f,g,h,"),
             ","
         ).load();
@@ -70,7 +70,7 @@ public class PersistedLogEntryRowsTest {
 
     @Test
     public void load_complex() {
-        List<LogEntryRow> rows = new PersistedLogEntryRows(
+        List<LogEntryRow> rows = new PersistedLogs(
             new FkTextFile("a,,,,,,,,"),
             ","
         ).load();
@@ -79,13 +79,10 @@ public class PersistedLogEntryRowsTest {
     @Test
     public void save() throws IOException {
         TextFile file = new FkTextFile("");
-        List<LogEntryRow> rows = new ArrayList<>();
-        rows.add(new TlLogEntryRow("a", "b", "c", "d"));
-        rows.add(new TlLogEntryRow("e", "f", "g", "h"));
-        new PersistedLogEntryRows(
-            file,
-            ","
-        ).save(rows);
+        List<Log> rows = new ArrayList<>();
+        rows.add(new TlLog("a", "b", "c", "d"));
+        rows.add(new TlLog("e", "f", "g", "h"));
+        new PersistedLogs(file, ",").save(new DefaultLogs(rows));
         MatcherAssert.assertThat(
             file.readAll(),
             Matchers.equalTo("a,b,c,d,e,f,g,h,")
