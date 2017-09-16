@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=TiliaLog
+Exec=bash /home/USER/projects/tilialog/run.bash
+Type=Application
+Categories=Utility;
