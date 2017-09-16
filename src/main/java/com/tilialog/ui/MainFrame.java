@@ -24,6 +24,13 @@ public class MainFrame {
             Integer.valueOf(settings.get("main_frame_size_w")),
             Integer.valueOf(settings.get("main_frame_size_h"))
         );
+        //frame.setResizable(false);
+        /*
+        frame.setMaximumSize(new Dimension(
+            Integer.valueOf(settings.get("main_frame_size_w")),
+            Integer.valueOf(settings.get("main_frame_size_h")) * 2
+        ));
+        */
         frame.setLocationRelativeTo(null);
         frame.setJMenuBar(menu.menu());
         frame.add(logEntryPanel.panel());
@@ -33,15 +40,4 @@ public class MainFrame {
     public LogEntryPanel logEntryPanel() {
         return logEntryPanel;
     }
-
-    /*
-    public JFrame frame() {
-        return frame;
-    }
-
-    public void redraw() {
-        frame.validate();
-        frame.repaint();
-    }
-    */
 }

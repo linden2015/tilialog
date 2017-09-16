@@ -87,6 +87,7 @@ public class TlLog implements Log {
         ;
     }
 
+    @Override
     public String toString() {
         return new StringBuilder()
             .append(storyCode())
@@ -100,13 +101,5 @@ public class TlLog implements Log {
             .append(duration().getSeconds() / 60 + " min")
             .toString()
         ;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (! (obj instanceof Log)) {
-            return false;
-        }
-        return false;
     }
 }

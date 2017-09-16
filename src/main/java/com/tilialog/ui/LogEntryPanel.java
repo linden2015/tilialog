@@ -9,8 +9,8 @@ import com.tilialog.Settings;
 import com.tilialog.TlLogEntryRow;
 import com.tilialog.TlTextFile;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,13 +50,15 @@ public class LogEntryPanel implements Observer {
 
     private void buildUI() {
         entryPanel = new JPanel();
-        entryPanel.setLayout(new FlowLayout());
+        entryPanel.setSize(new Dimension(840, 600));
         entryPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        JPanel fixedSizePanel = new JPanel();
+        fixedSizePanel.add(entryPanel);
         for (LogEntryRow row : persistedLogs.load()) {
             addLogEntryRowPanel(row);
         }
         scrollPanel = new JScrollPane(
-            entryPanel,
+            fixedSizePanel,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
         );
