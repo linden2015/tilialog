@@ -40,7 +40,7 @@ public class LogEntryPanel implements Observer {
             new TlTextFile(
                 new File("log-entry-rows.list")
             ),
-            ";;;"
+            new String(new byte[] {0x1E})
         );
         buildUI();
     }
@@ -98,16 +98,23 @@ public class LogEntryPanel implements Observer {
                 lastEmptyRowPanel = rowPanel;
             }
         }
-        if (emptyCount < 3) {
+        if (emptyCount == 3) {
+            return;
+        } else if (emptyCount < 3) {
             addLogEntryRowPanel(new TlLogEntryRow("", "", "", ""));
             redraw();
             determineAndApplyEmptyRows();
-        }
-        if (emptyCount > 3) {
+        } else {
             lastEmptyRowPanel.deleteObserver(this);
+
+            // Remove the row-panel from the list
             logEntryRowPanels.remove(lastEmptyRowPanel);
+
+            // Remove the row-panel from the parent panel
             entryPanel.remove(lastEmptyRowPanel.panel());
+
             redraw();
+            determineAndApplyEmptyRows();
         }
     }
 
