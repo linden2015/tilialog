@@ -1,10 +1,18 @@
 # Changes
 
+## 0.14
+
+* Fixed bug: redetermination of empty rows on clearing form
+* Fixed bug: unclear error messages
+* Fixed bug: layout disorganized on fullscreen
+* Added Bash scripts to: test, package, run
+* Added Gnome desktop entry example
+* Refactored validation and filtering to decorator pattern for Log and Logs
+
 ## 0.13
 
 * Log entry rows are saved to file on each change, and loaded on application start. This replaces
 the timed text backup.
-*
 
 ## 0.12
 

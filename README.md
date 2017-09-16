@@ -15,11 +15,25 @@ A Java program that helps you log time.
 
 Run compiled code:
 
-    java -jar target/tilialog-0.13.jar
+    bash run.sh
+
+Run tests:
+
+    bash test.sh
+
+Package to jar:
+
+    bash package.sh
 
 Build from source:
 
     mvn test exec:java
+
+Adding a desktop entry for Ubuntu Gnome:
+
+* copy `tilialog.desktop.dist` to `tilialog.desktop`
+* edit path of `Exec` to the correct directory
+* copy the `.desktop` file to `~/.local/share/applications/`
 
 ## Dependencies
 
