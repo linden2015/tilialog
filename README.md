@@ -15,15 +15,15 @@ A Java program that helps you log time.
 
 Run compiled code:
 
-    bash run.sh
+    bash run.bash
 
 Run tests:
 
-    bash test.sh
+    bash test.bash
 
 Package to jar:
 
-    bash package.sh
+    bash package.bash
 
 Build from source:
 
