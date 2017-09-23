@@ -1,5 +1,6 @@
 package com.tilialog.ui;
 
+import com.tilialog.AppIsOutdated;
 import com.tilialog.AtLeastOneLogs;
 import com.tilialog.NonEmptyLogs;
 import com.tilialog.NonOverlappingLogs;
@@ -24,33 +25,42 @@ public class Menu {
 
     private SettingsPanel settingsPanel;
 
-    public Menu(LogEntryPanel logEntryPanel, Settings settings) {
+    private AppIsOutdated appIsOutdated;
+
+    public Menu(LogEntryPanel logEntryPanel, Settings settings, AppIsOutdated appIsOutdated) {
         this.logEntryPanel = logEntryPanel;
         this.settings = settings;
+        this.appIsOutdated = appIsOutdated;
         buildUI();
     }
 
     private void buildUI() {
-        JMenu optionsMenu = new JMenu("Options");
-
-        JMenuItem reportMenuItem = new JMenuItem("Report");
+        JMenuItem reportMenuItem = new JMenuItem("Report..");
         reportMenuItem.addActionListener(new ReportMenuItemActionListener());
-        optionsMenu.add(reportMenuItem);
 
-        JMenuItem clearMenuItem = new JMenuItem("Clear form");
+        JMenuItem clearMenuItem = new JMenuItem("Clear form..");
         clearMenuItem.addActionListener(new ClearMenuItemActionListener());
-        optionsMenu.add(clearMenuItem);
 
-        JMenuItem settingsMenuItem = new JMenuItem("Settings");
+        JMenuItem settingsMenuItem = new JMenuItem("Settings..");
         settingsMenuItem.addActionListener(new SettingsMenuItemActionListener());
+
+        JMenu optionsMenu = new JMenu("Options");
+        optionsMenu.add(reportMenuItem);
+        optionsMenu.add(clearMenuItem);
         optionsMenu.add(settingsMenuItem);
+
+        JMenuItem UpdatesItem = new JMenuItem("Check for updates..");
+        UpdatesItem.addActionListener(new UpdatesItemActionListener());
+
+        JMenuItem aboutMenuItem = new JMenuItem("About..");
+        aboutMenuItem.addActionListener(new AboutMenuItemActionListener());
+
+        JMenu otherMenu = new JMenu("Other");
+        otherMenu.add(UpdatesItem);
+        otherMenu.add(aboutMenuItem);
 
         menuBar = new JMenuBar();
         menuBar.add(optionsMenu);
-        JMenuItem aboutMenuItem = new JMenuItem("About");
-        aboutMenuItem.addActionListener(new AboutMenuItemActionListener());
-        JMenu otherMenu = new JMenu("Other");
-        otherMenu.add(aboutMenuItem);
         menuBar.add(otherMenu);
     }
 
@@ -162,8 +172,28 @@ public class Menu {
         @Override
         public void actionPerformed(ActionEvent ae) {
             JOptionPane.showMessageDialog(
-                menuBar, new AboutPanel().panel()
+                menuBar,
+                new AboutPanel().panel(),
+                "About",
+                JOptionPane.INFORMATION_MESSAGE
             );
         }
+    }
+
+    private class UpdatesItemActionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            showUpdatesMessageDialog();
+        }
+    }
+
+    public void showUpdatesMessageDialog() {
+        JOptionPane.showMessageDialog(
+            menuBar,
+            new UpdatesPanel(appIsOutdated).panel(),
+            "Updates",
+            JOptionPane.INFORMATION_MESSAGE
+        );
     }
 }

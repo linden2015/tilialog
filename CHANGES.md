@@ -1,5 +1,11 @@
 # Changes
 
+## 0.15
+
+* Added a check to find out if the running version is the latest available version, with a
+corresponding dialog panel that opens automatically. The panel can also be opened from the menu
+manually.
+
 ## 0.14
 
 * Fixed bug: redetermination of empty rows on clearing form
