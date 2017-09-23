@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tilialog</groupId>
     <artifactId>tilialog</artifactId>
-    <version>0.14.0</version>
+    <version>0.15.0</version>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -92,6 +92,18 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <JCabi-Version>0.33</JCabi-Version>
+                            <JCabi-Build>3d2665d</JCabi-Build>
+                            <JCabi-Date>2017-09-21 08:22:19</JCabi-Date>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>
